@@ -113,6 +113,8 @@ function executeCommand(args, callback) {
   // if on windows or not piping to stdout
   if (process.platform === 'win32' || output !== '-') {
     child = spawn(args[0], args.slice(1));
+  } else if (process.env.AWS_EXECUTION_ENV) {
+    child = spawn('/opt/bin', ['-c', args.join(' ') + ' | cat']);
   } else {
     // this nasty business prevents piping problems on linux
     child = spawn('/bin/sh', ['-c', args.join(' ') + ' | cat']);
